@@ -1,0 +1,21 @@
+{
+  "name": "@dwerthen/react-extension",
+  "version": "0.0.1",
+  "description": "Allows React.createElement to be extended with a simple api",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.module.js",
+  "unpkg": "dist/index.umd.js",
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "Daniel Lichtenstein",
+  "license": "MIT",
+  "devDependencies": {
+    "microbundle": "^0.11.0"
+  }
+}
