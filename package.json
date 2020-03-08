@@ -11,6 +11,11 @@
     "build": "microbundle",
     "dev": "microbundle watch"
   },
+  "files": [
+    "dist/**/*",
+    "react.js",
+    "react.d.js"
+  ],
   "keywords": [
     "react"
   ],
