@@ -1,6 +1,6 @@
-import React from "react";
-import "./react.d.ts";
 import { ExtensionProvider } from "@dwerthen/react-extension";
+import React, { cloneElement } from "@dwerthen/react-extension/react";
+import "./react.d.ts";
 import logo from "./logo.svg";
 import "./App.css";
 
@@ -38,6 +38,7 @@ function App() {
           <p $backgroundColor="blue">
             Edit <code $color="red">src/App.tsx</code> and save to reload.
           </p>
+          {cloneElement(<p>Daniel</p>, { $color: "yellow" })}
           <a
             className="App-link"
             href="https://reactjs.org"
