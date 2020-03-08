@@ -14,4 +14,12 @@ Add the dependency with your preferred tool:
 yarn add @dwerthen/react-extension
 ```
 
-You want to import the library as early as possible, at the very top of your entrypoint. This is important since it can't decorate React if the react module is imported first.
+You want to import the library as early as possible, at the very top of your entrypoint. (Or at least above the first import of react) This is important since it can't decorate React if the react module is imported first.
+
+If this is cumbersome for whatever reason, and you are using webpack, you can alias this library to get the same effect.
+
+```
+webpackConfig.resolve.alias = {
+  react$: "@dwerthen/react-extension/react"
+}
+```

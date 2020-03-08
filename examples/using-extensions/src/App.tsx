@@ -38,7 +38,7 @@ function App() {
           <p $backgroundColor="blue">
             Edit <code $color="red">src/App.tsx</code> and save to reload.
           </p>
-          {cloneElement(<p>Daniel</p>, { $color: "yellow" })}
+          {cloneElement(<p>Cloned element in yellow</p>, { $color: "yellow" })}
           <a
             className="App-link"
             href="https://reactjs.org"
