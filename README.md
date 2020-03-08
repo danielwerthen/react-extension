@@ -85,3 +85,15 @@ declare module "react" {
 ```
 
 This example is obviously a bit contrived. To see what I use this extension for, checkout https://github.com/danielwerthen/stilren.
+
+## Custom components
+
+Since the extension happens at the createElement level, it works just as well with custom components too. As long as the component spreads any extra props onto their html nodes. Which is why we can write something like:
+
+```jsx
+import { Button } from "@material-ui/core";
+
+<Button $backgroundColor="red">It just works</Button>;
+```
+
+Using the extend function above, there is no need to make any modification to the used custom component.

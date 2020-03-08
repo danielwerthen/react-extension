@@ -1,5 +1,6 @@
 import { ExtensionProvider } from "@dwerthen/react-extension";
 import React, { cloneElement } from "@dwerthen/react-extension/react";
+import { Button } from "@material-ui/core";
 import "./react.d.ts";
 import logo from "./logo.svg";
 import "./App.css";
@@ -39,6 +40,9 @@ function App() {
             Edit <code $color="red">src/App.tsx</code> and save to reload.
           </p>
           {cloneElement(<p>Cloned element in yellow</p>, { $color: "yellow" })}
+          <Button $backgroundColor="green">
+            It works with custom components too.
+          </Button>
           <a
             className="App-link"
             href="https://reactjs.org"
