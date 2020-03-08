@@ -1,4 +1,9 @@
-const reactModule = require("react");
+let reactModule: any;
+if (process.env.NODE_ENV === "production") {
+  reactModule = require("react/cjs/react.production.min.js");
+} else {
+  reactModule = require("react/cjs/react.development.js");
+}
 
 export type ExtensionFunction = (
   tagName: string,

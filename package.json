@@ -18,7 +18,8 @@
   "devDependencies": {
     "@types/node": "^13.9.0",
     "@types/react": "^16.9.23",
-    "microbundle": "^0.11.0"
+    "microbundle": "^0.11.0",
+    "react": "^16.13.0"
   },
   "peerDependencies": {
     "react": "^16.13.0"
