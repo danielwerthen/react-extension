@@ -1,2 +1,2 @@
-
+var e=require("react"),r=e.createContext(),t=e.createElement,n={};e.createElement=function(o,a){for(var i=[],c=arguments.length-2;c-- >0;)i[c]=arguments[c+2];var s,f="string"==typeof o?n[s=o]||(n[s]=function(n){var o=e.forwardRef(function(o,a){var i=e.useContext(r),c="function"==typeof i?i(o):o;return t(n,Object.assign({},c,{ref:a}))});return"production"!==process.env.NODE_ENV&&(o.displayName=n),o}(s)):o;return t.apply(void 0,[f,a].concat(i))};var o=r.Provider;exports.extensionContext=r,exports.ExtensionProvider=o;
 //# sourceMappingURL=index.js.map
