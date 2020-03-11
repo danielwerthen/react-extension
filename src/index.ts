@@ -12,7 +12,7 @@ export type ExtensionFunction = (
 
 export const extensionContext: React.Context<ExtensionFunction> = reactModule.createContext();
 
-const reactCreateElement = reactModule.createElement;
+export const originalCreateElement = reactModule.createElement;
 
 const cache: { [key: string]: React.FunctionComponent } = {};
 function _extendTag(tagName: string): React.FunctionComponent {
@@ -21,7 +21,7 @@ function _extendTag(tagName: string): React.FunctionComponent {
       const extender = reactModule.useContext(extensionContext);
       const newProps =
         typeof extender === "function" ? extender(tagName, props) : props;
-      return reactCreateElement(tagName, { ...newProps, ref });
+      return originalCreateElement(tagName, { ...newProps, ref });
     }
   );
   if (process.env.NODE_ENV !== "production") {
@@ -40,7 +40,7 @@ reactModule.createElement = function extendedCreateElement(
   ...children: any
 ) {
   const newTag = typeof tag === "string" ? extendTag(tag) : tag;
-  return reactCreateElement(newTag, props, ...children);
+  return originalCreateElement(newTag, props, ...children);
 };
 
 export const ExtensionProvider = extensionContext.Provider;
