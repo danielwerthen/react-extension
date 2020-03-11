@@ -34,13 +34,11 @@ function extendTag(tagName: string): React.FunctionComponent {
   return cache[tagName] || (cache[tagName] = _extendTag(tagName));
 }
 
-reactModule.createElement = function extendedCreateElement(
-  tag: any,
-  props: any,
-  ...children: any
-) {
+export function extendedCreateElement(tag: any, props: any, ...children: any) {
   const newTag = typeof tag === "string" ? extendTag(tag) : tag;
   return originalCreateElement(newTag, props, ...children);
-};
+}
+
+reactModule.createElement = extendedCreateElement;
 
 export const ExtensionProvider = extensionContext.Provider;

@@ -6,4 +6,5 @@ export declare type ExtensionFunction = (tagName: string, props: {
 };
 export declare const extensionContext: React.Context<ExtensionFunction>;
 export declare const originalCreateElement: any;
+export declare function extendedCreateElement(tag: any, props: any, ...children: any): any;
 export declare const ExtensionProvider: import("react").Provider<ExtensionFunction>;
