@@ -10,7 +10,17 @@ export type ExtensionFunction = (
   props: { [key: string]: any }
 ) => { [key: string]: any };
 
-export const extensionContext: React.Context<ExtensionFunction> = reactModule.createContext();
+const CONTEXT_KEY = Symbol.for("@dwerthen/react-extension/Context");
+const globalSymbols = Object.getOwnPropertySymbols(global);
+const hasContext = globalSymbols.indexOf(CONTEXT_KEY) > -1;
+
+if (!hasContext) {
+  (global as any)[CONTEXT_KEY] = reactModule.createContext();
+}
+
+export const extensionContext: React.Context<ExtensionFunction> = (global as any)[
+  CONTEXT_KEY
+];
 
 export const originalCreateElement = reactModule.createElement;
 
