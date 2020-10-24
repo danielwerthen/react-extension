@@ -1,6 +1,11 @@
-require("./dist/index");
+var { extend } = require("./dist/index");
+
+var react;
 if (process.env.NODE_ENV === "production") {
-  module.exports = require("react/cjs/react.production.min.js");
+  react = require("react/cjs/react.production.min.js");
 } else {
-  module.exports = require("react/cjs/react.development.js");
+  react = require("react/cjs/react.development.js");
 }
+extend(react)
+
+module.exports = react

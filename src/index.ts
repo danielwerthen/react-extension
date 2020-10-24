@@ -1,54 +1,74 @@
-let reactModule: any;
-if (process.env.NODE_ENV === "production") {
-  reactModule = require("react/cjs/react.production.min.js");
-} else {
-  reactModule = require("react/cjs/react.development.js");
-}
-
-export type ExtensionFunction = (
-  tagName: string,
-  props: { [key: string]: any }
-) => { [key: string]: any };
-
-const CONTEXT_KEY = Symbol.for("@dwerthen/react-extension/Context");
-const globalSymbols = Object.getOwnPropertySymbols(global);
-const hasContext = globalSymbols.indexOf(CONTEXT_KEY) > -1;
-
-if (!hasContext) {
-  (global as any)[CONTEXT_KEY] = reactModule.createContext();
-}
-
-export const extensionContext: React.Context<ExtensionFunction> = (global as any)[
-  CONTEXT_KEY
+export type ExtensionFunction<P extends {}> = (
+  tagName: React.FunctionComponent<P> | React.ComponentClass<P> | string,
+  props?: (React.Attributes & P) | null,
+  ...children: React.ReactNode[]
+) => [
+  React.FunctionComponent<P> | React.ComponentClass<P> | string,
+  (React.Attributes & P) | null | undefined,
+  React.ReactNode[]
 ];
 
-export const originalCreateElement = reactModule.createElement;
+const STORE_KEY = Symbol.for("@dwerthen/react-extension/Store");
+const globalSymbols = Object.getOwnPropertySymbols(global);
+const hasContext = globalSymbols.indexOf(STORE_KEY) > -1;
 
-const cache: { [key: string]: React.FunctionComponent } = {};
-function _extendTag(tagName: string): React.FunctionComponent {
-  const Component = reactModule.forwardRef(
-    (props: { [key: string]: any }, ref: unknown) => {
-      const extender = reactModule.useContext(extensionContext);
-      const newProps =
-        typeof extender === "function" ? extender(tagName, props) : props;
-      return originalCreateElement(tagName, { ...newProps, ref });
-    }
+if (!hasContext) {
+  (global as any)[STORE_KEY] = [];
+}
+
+export const store: [ExtensionFunction<{}>, Symbol][] = (global as any)[
+  STORE_KEY
+];
+
+export const applyExtensions = (
+  createElement: any,
+  type: React.ElementType,
+  props: Object,
+  ...children: React.ReactNode[]
+) => {
+  const [nextTag, nextProps, nextChildren] = store.reduce(
+    (
+      [tag, props, children]: [
+        React.FunctionComponent<{}> | React.ComponentClass<{}> | string,
+        (React.Attributes & {}) | null | undefined,
+        React.ReactNode[]
+      ],
+      [fn]
+    ) => fn(tag, props, ...children),
+    [type, props, children]
   );
-  if (process.env.NODE_ENV !== "production") {
-    Component.displayName = tagName;
-  }
-  return Component;
+  return createElement(nextTag, nextProps, ...nextChildren);
+};
+
+export function extend(reactModule: any) {
+  const oldCE = reactModule.createElement;
+  reactModule.createElement = (...args: any) =>
+    (applyExtensions as any)(oldCE, ...args);
 }
 
-function extendTag(tagName: string): React.FunctionComponent {
-  return cache[tagName] || (cache[tagName] = _extendTag(tagName));
+export type TeardownCallback = () => void;
+
+export function registerExtension<P extends {}>(
+  fn: ExtensionFunction<P>
+): TeardownCallback {
+  const id = Symbol();
+  store.unshift([fn as ExtensionFunction<{}>, id]);
+  return () => {
+    const idx = store.findIndex(([_fn, sym]) => sym === id);
+    if (idx > -1) {
+      store.splice(idx, 1);
+    }
+  };
 }
 
-export function extendedCreateElement(tag: any, props: any, ...children: any) {
-  const newTag = typeof tag === "string" ? extendTag(tag) : tag;
-  return originalCreateElement(newTag, props, ...children);
+export function registerPropExtension<P extends {}, T extends {}>(
+  fn: (props: P) => T
+) {
+  return registerExtension((tagName, props?, ...children) => {
+    return [
+      tagName,
+      typeof props === "object" ? fn(props as P) : props,
+      children,
+    ];
+  });
 }
-
-reactModule.createElement = extendedCreateElement;
-
-export const ExtensionProvider = extensionContext.Provider;

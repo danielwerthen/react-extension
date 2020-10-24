@@ -1,8 +1,9 @@
-import { ExtensionProvider } from "@dwerthen/react-extension";
 import "../react.d.ts";
+import "@dwerthen/react-extension/react";
+import { registerPropExtension } from "@dwerthen/react-extension";
 // import App from 'next/app'
 
-function extend(_tagName: string, props: { [key: string]: any }) {
+registerPropExtension((props: { [key: string]: any }) => {
   const newProps: { [key: string]: any } = {};
   const newStyle: { [key: string]: any } = {};
   for (var key in props) {
@@ -20,19 +21,15 @@ function extend(_tagName: string, props: { [key: string]: any }) {
       ...newProps,
       style: {
         ...newProps.style,
-        ...newStyle
-      }
+        ...newStyle,
+      },
     };
   }
   return newProps;
-}
+});
 
 function MyApp({ Component, pageProps }: any) {
-  return (
-    <ExtensionProvider value={extend}>
-      <Component {...pageProps} />
-    </ExtensionProvider>
-  );
+  return <Component {...pageProps} />;
 }
 
 // Only uncomment this method if you have blocking data requirements for
